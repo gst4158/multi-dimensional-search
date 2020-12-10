@@ -1,4 +1,4 @@
-let data = {
+let data0 = {
 	dropdown: [
     [
       {
@@ -55,59 +55,98 @@ let data = {
       }   
     ]
   ]
+};
+
+let results0 = searchForKey(data0.dropdown, 'link1');
+console.log(results0);
+
+let data1 = {
+	columneData: {
+    column1: {
+      title: "this is a long title",
+      link: {
+        tag: "a",
+        base: "",
+        content: "Link Text",
+        attributes: {
+          id: "uniqueID1",
+          href: "google.com"
+        }
+      }
+    },
+    column2: {
+      title: "title for column 2",
+      link: {
+        tag: "button",
+        base: "",
+        content: "Link 2 Text",
+        attributes: {
+          id: "uniqueID2",
+          href: "gregorythomason.com"
+        }
+      }
+    }  
+  }
 }
 
 /**
 * Search through object or array for key to return its data set
 */
-let results = [];
-function searchForKey(arrayToSearch, key) {
+
+function searchForKey(arrayToSearch, key, getResults) {
+	let results = getResults || [];
+  
   // if given an array map it then search for key
 	if (arrayToSearch instanceof Array) {
   	arrayToSearch.map(function(item) {
     	if(key in item) {
-      	let pushedItem = {
-        	[key]: item[key]
-        }
-				results.push(pushedItem)
-        return;
+				results.push(item[key])
+        return results;
       }
       else {
-      	searchForKey(item, key);
+      	searchForKey(item, key, results);
       }
     });
   }
   // else we were given an object and we can search that
   else if (arrayToSearch instanceof Object) {
   	if(key in arrayToSearch) {
-      results.push(item[key]);
-      return;
+      results.push(arrayToSearch[key]);
+      return results;
     }
     else {
-    	for (item in arrayToSearch) {
-        if(arrayToSearch[item] instanceof Object && key in arrayToSearch[item]) {
-          results.push(arrayToSearch[item]);
-          return;
+      Object.keys(arrayToSearch).forEach((itemKey, index) => {
+        if (itemKey === key) {
+          results.push(arrayToSearch[itemKey]);
         }
-      	searchForKey(arrayToSearch[item], key)
-      }
+        else {
+        	searchForKey(arrayToSearch[itemKey], key, results)
+        }
+      });
     }
   }
+  
+  return results;
 };
 
-searchForKey(data.dropdown, 'link1');
-console.log(results);
+let results1 = searchForKey(data1, 'column1');
+console.log(results1);
 
 /*
   Expected result:
-  [{
-    link1: {
-      text: "this shit is really deep"
-    }
-  }, {
-    link1: {
-      target: "_self",
-      url: "www.george.com"
-    }
-  }]
+[{
+  text: "this shit is really deep"
+}, {
+  target: "_self",
+  url: "www.george.com"
+}]
+[{
+  link: {
+    attributes: { ... },
+    base: "",
+    content: "Link Text",
+    tag: "a"
+  },
+  title: "this is a long title"
+}]
 */
