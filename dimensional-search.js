@@ -1,4 +1,3 @@
-let searchedKey = "link1";
 let data = {
 	dropdown: [
     [
@@ -58,13 +57,12 @@ let data = {
   ]
 }
 
-let results = [];
-
 /**
-* Search for a key through a multi-dimensional array or object
+* Search through object or array for key to return its data set
 */
+let results = [];
 function searchForKey(arrayToSearch, key) {
-	// if given an array map it then search for key
+  // if given an array map it then search for key
 	if (arrayToSearch instanceof Array) {
   	arrayToSearch.map(function(item) {
     	if(key in item) {
@@ -97,19 +95,19 @@ function searchForKey(arrayToSearch, key) {
   }
 };
 
-searchForKey(data.dropdown, searchedKey);
+searchForKey(data.dropdown, 'link1');
 console.log(results);
 
 /*
-Expected result:
-[{
-  link1: {
-    text: "this shit is really deep"
-  }
-}, {
-  link1: {
-    target: "_self",
-    url: "www.george.com"
-  }
-}]
+  Expected result:
+  [{
+    link1: {
+      text: "this shit is really deep"
+    }
+  }, {
+    link1: {
+      target: "_self",
+      url: "www.george.com"
+    }
+  }]
 */
